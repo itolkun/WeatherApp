@@ -10,7 +10,20 @@ import Foundation
 class WeatherViewModel: ObservableObject {
     
     @Published var weatherDataArray: [WeatherData] = []
-    let cities = ["Saint Petersburg", "New York", "Bishkek", "Moscow", "London", "Sidney"]
+    let cities = [
+        "Saint Petersburg",
+        "Bishkek",
+        "New York",
+        "Lisbon",
+        "San Francisco",
+        "Almata",
+        "Moscow",
+        "London",
+        "Sidney",
+        "Paris",
+        "Amsterdam",
+        "Kemer"
+    ]
 
     
     init() {
