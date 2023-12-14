@@ -20,3 +20,8 @@ struct Weather: Codable {
     let main: String
     let description: String
 }
+
+extension Main: Hashable {}
+extension Weather: Hashable {}
+extension WeatherData: Hashable {}
+

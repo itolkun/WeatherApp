@@ -9,7 +9,9 @@ import Foundation
 
 class WeatherViewModel: ObservableObject {
     
-    @Published var weatherData: WeatherData?
+    @Published var weatherDataArray: [WeatherData] = []
+    let cities = ["Saint Petersburg", "New York", "Bishkek", "Moscow", "London", "Sidney"]
+
     
     init() {
         showWeather()
@@ -18,7 +20,10 @@ class WeatherViewModel: ObservableObject {
     private func showWeather() {
         Task {
             do {
-                weatherData = try await NetworkManager.shared.fetchData()
+                let fetchedWeatherDataArray = try await NetworkManager.shared.fetchData(for: cities)
+                DispatchQueue.main.async {
+                    self.weatherDataArray = fetchedWeatherDataArray
+                }
             } catch let error {
                 print(error.localizedDescription)
             }

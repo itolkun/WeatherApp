@@ -13,30 +13,34 @@ class NetworkManager {
     
     private init() {}
     
-    let cityName = "Saint Petersburg"
     let apiKey = "06e589ac44d15b423d8d1cf8c6e99825"
     
-    
-    func fetchData() async throws -> WeatherData {
-        let url = "https://api.openweathermap.org/data/2.5/weather?q="
-        let endPoint = url + cityName + "&appid=" + apiKey
-        guard let url = URL(string: endPoint) else {
-            throw NetworkError.invalidUrl
-        }
-        let (data, _) = try await URLSession.shared.data(from: url)
+    func fetchData(for cities: [String]) async throws -> [WeatherData] {
+        var weatherDataArray: [WeatherData] = []
         
-        let decoder = JSONDecoder()
-        let weatherData: WeatherData
-        
-        do {
-            weatherData =  try decoder.decode(WeatherData.self, from: data)
-        } catch let error {
-            print(error.localizedDescription)
-            throw NetworkError.decodingError
+        for cityName in cities {
+            let url = "https://api.openweathermap.org/data/2.5/weather?q="
+            let endPoint = url + cityName + "&appid=" + apiKey
+            
+            guard let url = URL(string: endPoint) else {
+                throw NetworkError.invalidUrl
+            }
+            
+            do {
+                let (data, _) = try await URLSession.shared.data(from: url)
+                let decoder = JSONDecoder()
+                let weatherData = try decoder.decode(WeatherData.self, from: data)
+                weatherDataArray.append(weatherData)
+            } catch {
+                print(error.localizedDescription)
+                throw NetworkError.decodingError
+            }
         }
-        return weatherData
+        
+        return weatherDataArray
     }
 }
+
 
 
 enum NetworkError: Error {
